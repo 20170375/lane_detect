@@ -1,6 +1,6 @@
 # lane_detect
 
-    anaconda-python with opencv
+    anaconda-python with openCV
 <hr/>
 
 ## [Source code](https://github.com/20170375/lane_detect/blob/main/lane_detect.py)
