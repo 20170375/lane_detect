@@ -97,10 +97,10 @@ while True:
             rLine[2] = rLine[2] / right_count
             rLine[3] = rLine[3] / right_count
 
-        # 이미지에 left 평균 차선 출력
+        # left 평균 차선(Red) 출력
         cv2.line(masked_cdstP, (int(lLine[0]), int(lLine[1])),
                          (int(lLine[2]), int(lLine[3])), (0, 0, 255), 10, cv2.LINE_AA)
-        # 이미지에 right 평균 차선 출력
+        # right 평균 차선(Red) 출력
         cv2.line(masked_cdstP, (int(rLine[0]), int(rLine[1])),
                      (int(rLine[2]), int(rLine[3])), (0, 0, 255), 10, cv2.LINE_AA)
 
@@ -112,7 +112,7 @@ while True:
 
     fm_cdstP = fillter(masked_cdstP)
 
-    # 차선 분석 기준점 출력
+    # 차선 분석 기준선(Green) 출력
     cv2.line(src, (centerX-20, 0), (centerX-20, 359), (0, 255, 0), 1, cv2.LINE_AA)
     cv2.line(src, (centerX+20, 0), (centerX+20, 359), (0, 255, 0), 1, cv2.LINE_AA)
     cv2.line(fm_cdstP, (centerX-20, 0), (centerX-20, 359), (0, 255, 0), 1, cv2.LINE_AA)
@@ -129,10 +129,14 @@ while True:
             # 중앙선 침범이 아니라면
             rGrad = (rStart[1] - rEnd[1]) / (rStart[0] - rEnd[0])
 
-        lInter = lStart[1] - lGrad * lStart[0]
-        rInter = rStart[1] - rGrad * rStart[0]
-        crossX = (rInter - lInter) / (lGrad - rGrad)
-        crossY = int(lGrad * crossX + lInter)
+        # x절편, y절편, 교점
+        l_yInter = lStart[1] - lGrad * lStart[0]
+        r_yInter = rStart[1] - rGrad * rStart[0]
+        l_xInter = (-1 * l_yInter) / lGrad
+        r_xInter = (height - r_yInter) / rGrad
+        crossX = (r_yInter - l_yInter) / (lGrad - rGrad)
+        crossY = int(lGrad * crossX + l_yInter)
+
         if crossX < centerX-20:
             # 교점이 left 에 있을 때
             move("left")
@@ -145,6 +149,12 @@ while True:
             # 교점이 center 에 있을 때
             move("forward")
             cv2.putText(fm_cdstP, "forward", (centerX - 120, 340), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
+
+        # left 연장선(Red) 출력
+        cv2.line(fm_cdstP, (0, int(l_yInter)), (int(l_xInter), 0), (127, 127, 255), 1, cv2.LINE_AA)
+        # right 연장선(Red) 출력
+        cv2.line(fm_cdstP, (int((-1 * r_yInter) / rGrad), 0), (int(r_xInter), height),
+                 (127, 127, 255), 1, cv2.LINE_AA)
 
         # 교점 출력
         if crossY>=0 and crossY<=height:
