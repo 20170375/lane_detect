@@ -1,7 +1,7 @@
 import cv2
 import math
 import numpy as np
-import test
+import test_module as test
 
 # 상수 선언
 INF = 9999
@@ -40,7 +40,7 @@ pwm = test.setting()
 # cap = cv2.VideoCapture(0)
 
 # 비디오 파일로부터 영상 받기
-cap = cv2.VideoCapture("./video1.mp4")
+cap = cv2.VideoCapture("./samples/video1.mp4")
 
 while True:
     ret, src = cap.read()
