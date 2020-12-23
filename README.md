@@ -21,6 +21,17 @@
     **openCV를 import하여 카메라장치 혹은 샘플동영상으로부터 영상을 받는다**
 
     **640x360(pixel) 으로 resize하고, 사다리꼴 모양 mask를 적용시켜 차선을 탐지할 범위를 좁힌다.**
+    ``` C
+    polygons = np.array([
+        [(0, HEIGHT-100), (WIDTH, HEIGHT-100), (WIDTH-199, HEIGHT-210), (199, HEIGHT-210)]
+    ])
+
+    def region_of_interest(image, color):
+        mask = np.zeros_like(image)
+        cv2.fillPoly(mask, polygons, color)
+        masked_image = cv2.bitwise_and(image, mask)
+        return masked_image
+    ```
 
     **cv2.HoughLinesP() 함수를 사용하여 탐지된 선분들의 집합에서 각도가 20°이상 160°이하인 선분을 찾아,**
 
