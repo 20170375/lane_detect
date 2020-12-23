@@ -176,7 +176,8 @@ while True:
     cv2.imshow("Source", src)
     cv2.imshow("Detected Lines (in red) - Probabilistic Line Transform", fm_cdstP)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    # 키보드 q가 눌리면 중단
+    if cv2.waitKey(1)&0xFF == ord('q'):
         break
 
 cap.release()
