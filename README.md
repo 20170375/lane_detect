@@ -63,6 +63,9 @@
 
     **RPi.GPIO를 import하여 setting(), move(), stop(), cleanup() 함수 구현**
 
+## To do
++ [**!ssize.empty() in function 'cv::resize'**](https://www.google.com/search?q=!ssize.empty()+in+function+) **에러 fix**
+
 ## Reference
 + [openCV로 차선인식하기[허프변환]](https://diy-project.tistory.com/115)
 + [openCV 비디오 입력 출력](https://copycoding.tistory.com/154)
