@@ -1,18 +1,18 @@
 import cv2
 import math
 import numpy as np
+import test
 
-cap = cv2.VideoCapture("./video1.mp4")
-font = cv2.FONT_HERSHEY_DUPLEX
-
+# 상수 선언
 INF = 9999
 YET = 0
-width = 639
-height = 359
-centerX = 319
+WIDTH = 639
+HEIGHT = 359
 
+centerX = 319
+font = cv2.FONT_HERSHEY_DUPLEX
 polygons = np.array([
-        [(0, height-100), (width, height-100), (width-199, height-210), (199, height-210)]
+        [(0, HEIGHT-100), (WIDTH, HEIGHT-100), (WIDTH-199, HEIGHT-210), (199, HEIGHT-210)]
     ])
 
 def canny(image):
@@ -33,13 +33,18 @@ def red_filter(image):
     out = cv2.bitwise_and(image, image, mask=mask)
     return out
 
-def move(diretion, pwm=None):
-    # 라즈베리파이 동작 구현
-    print(diretion)
+# 라즈베리파이 모터 초기설정
+pwm = test.setting()
+
+# 카메라 장치로부터 영상 받기
+# cap = cv2.VideoCapture(0)
+
+# 비디오 파일로부터 영상 받기
+cap = cv2.VideoCapture("./video1.mp4")
 
 while True:
     ret, src = cap.read()
-    src = cv2.resize(src, (width+1, height+1))
+    src = cv2.resize(src, (WIDTH+1, HEIGHT+1))
 
     dst = canny(src)
     masked_dst = region_of_interest(dst, (255, 255, 255))
@@ -132,44 +137,44 @@ while True:
         l_yInter = lStart[1] - lGrad * lStart[0]
         r_yInter = rStart[1] - rGrad * rStart[0]
         l_xInter = (-1 * l_yInter) / lGrad
-        r_xInter = (height - r_yInter) / rGrad
+        r_xInter = (HEIGHT - r_yInter) / rGrad
         crossX = (r_yInter - l_yInter) / (lGrad - rGrad)
         crossY = int(lGrad * crossX + l_yInter)
 
         if crossX < centerX-20:
             # 교점이 left 에 있을 때
-            move("left")
+            test.move("left")
             cv2.putText(fm_cdstP, "left", (centerX - 200, 80), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
         elif crossX > centerX+20:
             # 교점이 right 에 있을 때
-            move("right")
+            test.move("right")
             cv2.putText(fm_cdstP, "right", (centerX + 80, 80), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
         else:
             # 교점이 center 에 있을 때
-            move("forward")
+            test.move("forward")
             cv2.putText(fm_cdstP, "forward", (centerX - 120, 340), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
 
         # left 연장선(Red) 출력
         cv2.line(fm_cdstP, (0, int(l_yInter)), (int(l_xInter), 0), (127, 127, 255), 1, cv2.LINE_AA)
         # right 연장선(Red) 출력
-        cv2.line(fm_cdstP, (int((-1 * r_yInter) / rGrad), 0), (int(r_xInter), height),
+        cv2.line(fm_cdstP, (int((-1 * r_yInter) / rGrad), 0), (int(r_xInter), HEIGHT),
                  (127, 127, 255), 1, cv2.LINE_AA)
 
         # 교점 출력
-        if crossY>=0 and crossY<=height:
+        if crossY>=0 and crossY<=HEIGHT:
             cv2.circle(fm_cdstP, (int(crossX), crossY), 1, (255, 0, 0), 10)
 
     elif lStart[0]!=YET and rStart[0]==YET:
         # left 차선만 탐지된 경우
-        move("only on right")
+        test.move("only on right")
         cv2.putText(fm_cdstP, "right", (centerX + 80, 80), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
     elif lStart[0]==YET and rStart[0]!=YET:
         # right 차선만 탐지된 경우
-        move("only on left")
+        test.move("only on left")
         cv2.putText(fm_cdstP, "left", (centerX - 200, 80), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
     else:
         # 둘다 탐지가 안된 경우
-        move("forward")
+        test.move("forward")
         cv2.putText(fm_cdstP, "forward", (centerX - 120, 340), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
 
     # 출력
@@ -182,3 +187,6 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+test.stop(pwm)
+test.cleanup()
