@@ -7,7 +7,7 @@
     anaconda-python with openCV
 <hr/>
 
-## Source code
+## Code comment
 
 + [**lane_detect.py**](https://github.com/20170375/lane_detect/blob/main/lane_detect.py)
 
