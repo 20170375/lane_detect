@@ -15,9 +15,6 @@ polygons = np.array([
         [(0, height-100), (width, height-100), (width-199, height-210), (199, height-210)]
     ])
 
-lower = np.array([0, 0, 200])
-upper = np.array([0, 0, 255])
-
 def canny(image):
     blur = cv2.GaussianBlur(image,(5,5),0)
     canny = cv2.Canny(blur, 50, 200, None, 3)
@@ -29,7 +26,9 @@ def region_of_interest(image, color):
     masked_image = cv2.bitwise_and(image, mask)
     return masked_image
 
-def fillter(image):
+def red_filter(image):
+    lower = np.array([0, 0, 200])
+    upper = np.array([0, 0, 255])
     mask = cv2.inRange(image, lower, upper)
     out = cv2.bitwise_and(image, image, mask=mask)
     return out
@@ -110,7 +109,7 @@ while True:
         rStart = [int(rLine[0]), int(rLine[1])]
         rEnd = [int(rLine[2]), int(rLine[3])]
 
-    fm_cdstP = fillter(masked_cdstP)
+    fm_cdstP = red_filter(masked_cdstP)
 
     # 차선 분석 기준선(Green) 출력
     cv2.line(src, (centerX-20, 0), (centerX-20, 359), (0, 255, 0), 1, cv2.LINE_AA)
