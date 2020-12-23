@@ -22,6 +22,6 @@
 
 + [**test_module.py**](https://github.com/20170375/lane_detect/blob/main/test_module.py)
 
-    라즈베리파이 모터 동작 함수들을 구현한 모듈
+    **라즈베리파이 모터 동작 함수들을 구현한 모듈**
 
-    RPi.GPIO를 import하여 setting(), move(), stop(), cleanup() 함수 구현
+    **RPi.GPIO를 import하여 setting(), move(), stop(), cleanup() 함수 구현**
