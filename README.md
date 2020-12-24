@@ -46,7 +46,7 @@
     ``` C
     if crossX < centerX-20:
             # 교점이 left 에 있을 때
-    elif crossX > centerX+20:
+    else if crossX > centerX+20:
             # 교점이 right 에 있을 때
     else:
             # 교점이 center 에 있을 때
